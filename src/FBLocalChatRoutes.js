@@ -104,7 +104,7 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
 
   router.get('/localChat/*', (req, res) => {
     const dir = path.join(path.dirname(__filename), '..', 'localChatWeb');
-    var filePath = req.url.replace('/localChat', '');
+    var filePath = path.join(...(path.normalize(req.path).split(path.sep).filter(leaf => leaf !== 'localChat')));
     if (filePath !== '/') {
       res.sendFile(filePath, {root: dir});
       return
@@ -112,7 +112,7 @@ const FBLocalChatRoutes = (router: Router, Bot: Object): Router => {
     const baseURL = req.baseUrl;
 
     // return html
-    fs.readFile(dir + '/index.html', 'utf8', (err, data) => {
+    fs.readFile(path.join(dir, 'index.html'), 'utf8', (err, data) => {
       console.log(err);
       if (err) {
         res.send('ERROR');
